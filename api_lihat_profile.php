@@ -30,20 +30,12 @@ if (!isset($_SESSION['login_user'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     // Pastikan data yang diperlukan ada dalam request
-    if (isset($_POST['name'])) {
-        $name = $_POST['name'];
 
-        // Panggil fungsi untuk mengubah profil pengguna
-        if (updateUserProfile($email, $name)) {
-            echo json_encode(array("message" => "Profile updated successfully"));
-        } else {
-            http_response_code(500);
-            echo json_encode(array("message" => "Failed to update profile. Please try again."));
-        }
-    } else {
-        http_response_code(400);
-        echo json_encode(array("message" => "Missing required data"));
-    }
+    $sql = "SELECT * FROM students WHERE email='$email'";
+    $result = $conn->query($sql);
+    $row = $result->fetch_assoc();
+    // Panggil fungsi untuk mengubah profil pengguna
+    echo json_encode(array("data" => $row['name']));
 } else {
     http_response_code(405);
     echo json_encode(array("message" => "Method Not Allowed"));

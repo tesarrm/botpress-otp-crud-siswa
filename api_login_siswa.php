@@ -40,6 +40,12 @@ function sendOTP($email, $otp)
 
         // Kirim email
         $mail->send();
+
+        // Simpan OTP di database
+        global $conn; // Sesuaikan dengan koneksi database Anda
+        $sql = "INSERT INTO otp_verification (email, otp) VALUES ('$email', '$otp')";
+        $result = mysqli_query($conn, $sql);
+
         return true;
     } catch (Exception $e) {
         return false;
@@ -49,14 +55,23 @@ function sendOTP($email, $otp)
 // Fungsi untuk mengautentikasi pengguna berdasarkan OTP
 function authenticateUser($email, $otp)
 {
-    if (isset($_SESSION['otp']) && $_SESSION['otp'] == $otp) {
+    global $conn; // Sesuaikan dengan koneksi database Anda
+    $sql = "SELECT * FROM otp_verification WHERE email = '$email' AND otp = '$otp'";
+    $result = mysqli_query($conn, $sql);
+    if (mysqli_num_rows($result) > 0) {
         // OTP valid, set session login_user
         $_SESSION['login_user'] = $email;
+
+        // Hapus OTP dari database setelah digunakan
+        $sql_delete = "DELETE FROM otp_verification WHERE email = '$email'";
+        mysqli_query($conn, $sql_delete);
+
         return true;
     } else {
         return false;
     }
 }
+
 // Endpoint untuk verifikasi OTP dan autentikasi pengguna
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['email'], $_POST['otp'])) {
     $email = $_POST['email'];
