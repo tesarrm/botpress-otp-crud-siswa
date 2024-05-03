@@ -26,6 +26,32 @@ if ($result->num_rows == 0) {
 
 <head>
     <title>Dashboard</title>
+    <!-- Tambahkan link CSS dan JS untuk Botpress UI -->
+    <link rel="stylesheet" href="https://cdn.botpress.com/channel-web/inject/botpress-webchat.css" />
+    <script src="https://cdn.botpress.com/channel-web/inject/botpress-webchat.js"></script>
+    <script>
+        // Inisialisasi Botpress Webchat
+        window.addEventListener('load', function () {
+            WebChat.default.init({ host: 'YOUR_BOTPRESS_SERVER_HOSTNAME' });
+        });
+    </script>
+    <style>
+        /* Tambahkan gaya kustom untuk tabel */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 
 <body>
@@ -50,6 +76,9 @@ if ($result->num_rows == 0) {
         }
         ?>
     </table>
+
+    <!-- Tambahkan elemen untuk Botpress Webchat -->
+    <div id="webchat" style="position: fixed; bottom: 20px; right: 20px;"></div>
 </body>
 
 </html>
